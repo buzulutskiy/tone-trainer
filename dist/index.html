@@ -1,131 +1,48 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#161613">
-  <meta name="description" content="Тренажёр тональных отношений: расставьте основные пятна от светлого к тёмному и проверьте себя в чёрно-белом режиме.">
-  <title>Тон — тренажёр тональных отношений</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23161613'/%3E%3Cpath d='M13 42 32 12l19 30H13Z' fill='%23f0eee5'/%3E%3Cpath d='M23 42 32 27l9 15H23Z' fill='%23ff6b35'/%3E%3C/svg%3E">
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0b0b0c">
+  <meta name="description" content="Игра, которая учит видеть светлоту цвета — от простого сравнения до тональной шкалы из шести цветов.">
+  <title>ТОН — игра для тренировки глаза</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b0b0c'/%3E%3Crect x='12' y='12' width='18' height='40' rx='4' fill='%23ff5c35'/%3E%3Crect x='34' y='12' width='18' height='40' rx='4' fill='%23e7ff4f'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./readiness.css">
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="#" aria-label="Тон — в начало">
-      <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
-      <span>ТОН</span>
-    </a>
-    <p>Тренажёр тональных отношений</p>
-    <button class="help-button" type="button" id="helpButton" aria-haspopup="dialog">Как тренироваться</button>
+    <a class="brand" href="#" id="brandButton" aria-label="Начать заново"><span class="brand-mark" aria-hidden="true"><i></i><i></i></span><span>ТОН</span></a>
+    <div class="level-track" id="levelTrack" aria-label="Уровни игры"></div>
+    <button class="icon-button" id="helpButton" type="button" aria-label="Как играть">?</button>
   </header>
-
-  <main>
-    <section class="setup" id="setupPanel" aria-labelledby="setupTitle">
-      <div class="setup-copy">
-        <span class="eyebrow">Новая тренировка</span>
-        <h1 id="setupTitle">Разложите картину<br>на большие тона</h1>
-        <p>Загрузите изображение и отметьте главные пятна — от самого светлого до самого тёмного.</p>
+  <main class="game-shell">
+    <aside class="hud">
+      <div class="hud-top">
+        <span class="kicker" id="levelKicker">Уровень 1 · Контраст</span>
+        <h1 id="prompt">Какой цвет светлее?</h1>
+        <p id="instruction">Смотрите на светлоту, а не на яркость оттенка.</p>
       </div>
-
-      <div class="upload-card" id="dropZone">
-        <input id="fileInput" type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden>
-        <div class="upload-icon" aria-hidden="true">
-          <svg viewBox="0 0 32 32"><path d="M16 22V6m0 0-6 6m6-6 6 6M6 21v5h20v-5"/></svg>
-        </div>
-        <h2>Перетащите картину сюда</h2>
-        <p>JPG, PNG или WebP · до 20 МБ</p>
-        <button class="primary-button" id="chooseButton" type="button">Выбрать изображение</button>
+      <div class="lesson-card"><span class="lesson-number" id="lessonNumber">01</span><p id="lessonText"></p></div>
+      <div class="stats">
+        <div><span>Раунд</span><strong id="roundStat">1 / 5</strong></div><div><span>Очки</span><strong id="scoreStat">0</strong></div><div><span>Серия</span><strong id="streakStat">0</strong></div>
       </div>
-
-      <div class="count-control" aria-labelledby="countLabel">
-        <div>
-          <span class="eyebrow" id="countLabel">Количество тонов</span>
-          <p>Для начала лучше взять 4–5 крупных пятен</p>
-        </div>
-        <div class="segmented" role="radiogroup" aria-label="Количество тонов">
-          <button type="button" role="radio" aria-checked="true" data-count="4">4</button>
-          <button type="button" role="radio" aria-checked="false" data-count="5">5</button>
-          <button type="button" role="radio" aria-checked="false" data-count="6">6</button>
-        </div>
-      </div>
-    </section>
-
-    <section class="workspace" id="workspace" hidden aria-live="polite">
-      <aside class="task-panel">
-        <div>
-          <span class="eyebrow">Шаг <b id="stepCurrent">1</b> из <b id="stepTotal">4</b></span>
-          <h1 id="taskTitle">Найдите самый светлый тон</h1>
-          <p id="taskHint">Поставьте точку в центре крупного светлого пятна.</p>
-        </div>
-
-        <ol class="tone-list" id="toneList"></ol>
-
-        <div class="panel-actions">
-          <button class="primary-button check-button" id="checkButton" type="button" disabled>Проверить в Ч/Б</button>
-          <button class="text-button" id="undoButton" type="button" disabled>↶ Отменить последнюю точку</button>
-        </div>
-      </aside>
-
-      <div class="canvas-panel">
-        <div class="canvas-toolbar">
-          <div class="image-name">
-            <span id="fileName">Изображение</span>
-            <button type="button" id="changeImage">Заменить</button>
-          </div>
-          <label class="blur-toggle">
-            <input id="blurToggle" type="checkbox">
-            <span class="switch" aria-hidden="true"></span>
-            <span>Расфокусировать</span>
-          </label>
-        </div>
-
-        <div class="image-stage" id="imageStage">
-          <canvas id="imageCanvas" aria-label="Загруженное изображение. Ставьте точки от светлого тона к тёмному."></canvas>
-          <div class="markers" id="markers" aria-hidden="true"></div>
-        </div>
-
-        <div class="stage-footer">
-          <span id="stageStatus">Кликните по самому светлому крупному пятну</span>
-          <span>Проба берётся с небольшой области вокруг точки</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="results" id="results" hidden aria-labelledby="resultsTitle">
-      <div class="results-head">
-        <div>
-          <span class="eyebrow">Проверка</span>
-          <h1 id="resultsTitle">Тональный разбор</h1>
-        </div>
-        <div class="score" id="scoreBlock"><strong id="scoreValue">—</strong><span>точность порядка</span></div>
-      </div>
-      <div class="results-grid">
-        <div class="result-image-wrap">
-          <div class="image-stage result-stage"><canvas id="resultCanvas"></canvas><div class="markers" id="resultMarkers"></div></div>
-          <label class="compare-control"><span>Цвет</span><input id="compareSlider" type="range" min="0" max="100" value="100"><span>Ч/Б</span></label>
-        </div>
-        <aside class="result-panel">
-          <div class="result-summary" id="resultSummary"></div>
-          <ol class="result-list" id="resultList"></ol>
-          <button class="primary-button" id="tryAgain" type="button">Попробовать ещё раз</button>
-          <button class="secondary-button" id="newImage" type="button">Взять другую картину</button>
-        </aside>
+      <div class="readiness"><div class="readiness-head"><span>Готовность к картине</span><strong id="readinessValue">0%</strong></div><div class="readiness-bar"><i id="readinessBar"></i><b title="Здесь откроется этап с картинами"></b></div><p id="readinessText">До этапа с картинами — 24 тренировки</p></div>
+    </aside>
+    <section class="play-area" aria-live="polite">
+      <div class="play-toolbar"><span id="modeLabel">Выберите одну плитку</span><div class="vision-toggle" aria-label="Режим просмотра"><button class="active" type="button" data-vision="color">Цвет</button><button type="button" data-vision="gray">Ч/Б</button></div></div>
+      <div class="tiles" id="tiles" role="group" aria-label="Цветовые плитки"></div>
+      <div class="tone-rack"><div class="rack-head"><span>Ваша тональная шкала</span><button id="undoButton" type="button" disabled>Отменить</button></div><div class="rack-slots" id="rackSlots"></div></div>
+      <div class="feedback" id="feedback" hidden>
+        <div class="feedback-copy"><span class="result-mark" id="resultMark">Верно</span><h2 id="resultTitle">Вы увидели тон</h2><p id="resultText"></p></div>
+        <button class="next-button" id="nextButton" type="button">Следующий раунд <span>→</span></button>
       </div>
     </section>
   </main>
-
-  <dialog id="helpDialog">
-    <button class="dialog-close" id="closeHelp" type="button" aria-label="Закрыть">×</button>
-    <span class="eyebrow">Как тренироваться</span>
-    <h2>Ищите отношения, а не детали</h2>
-    <ol>
-      <li><b>Прищурьтесь</b> или включите расфокусировку — мелкие детали исчезнут.</li>
-      <li><b>Выберите крупные массы</b>, которые заметно отличаются по светлоте.</li>
-      <li><b>Идите от света к тени.</b> Не ищите абсолютный белый или чёрный.</li>
-      <li><b>Проверьте себя в Ч/Б:</b> цвет перестанет отвлекать от тона.</li>
-    </ol>
-  </dialog>
-
+  <section class="level-complete" id="levelComplete" hidden aria-live="assertive"><div class="complete-card">
+    <span class="kicker">Тренировка завершена</span><strong id="completeScore">4 / 5</strong><h2 id="completeTitle">Вы различаете контраст</h2><p id="completeText"></p><div class="complete-progress"><span>Путь к картине</span><b id="completeProgress">1 / 30</b></div>
+    <button class="next-button" id="continueButton" type="button">Уровень 2 <span>→</span></button><button class="link-button" id="replayButton" type="button">Повторить уровень</button>
+  </div></section>
+  <dialog id="helpDialog"><button class="dialog-close" id="closeHelp" type="button" aria-label="Закрыть">×</button><span class="kicker">Правила</span><h2>Цвет отвлекает.<br>Игра учит видеть свет.</h2><ol>
+    <li><b>На первых уровнях</b> выберите самый светлый или самый тёмный цвет.</li><li><b>Дальше</b> соберите всю шкалу — кликайте от светлого к тёмному.</li><li><b>После ответа</b> плитки станут серыми: так сразу видно настоящие отношения.</li><li><b>Чтобы пройти уровень,</b> наберите минимум 4 правильных ответа из 5.</li>
+  </ol></dialog>
   <script src="./app.js"></script>
-</body>
-</html>
+</body></html>
