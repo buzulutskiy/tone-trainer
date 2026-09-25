@@ -18,8 +18,8 @@
     <aside class="hud">
       <div class="hud-top">
         <span class="kicker" id="levelKicker">Уровень 1 · Контраст</span>
-        <h1 id="prompt">Какой цвет светлее?</h1>
-        <p id="instruction">Смотрите на светлоту, а не на яркость оттенка.</p>
+        <h1 id="prompt">Какая плитка станет светлее в Ч/Б?</h1>
+        <p id="instruction">Мысленно уберите цвет. Сравните только будущие оттенки серого.</p>
       </div>
       <div class="lesson-card"><span class="lesson-number" id="lessonNumber">01</span><p id="lessonText"></p></div>
       <div class="stats">
@@ -28,7 +28,7 @@
       <div class="readiness"><div class="readiness-head"><span>Готовность к картине</span><strong id="readinessValue">0%</strong></div><div class="readiness-bar"><i id="readinessBar"></i><b title="Здесь откроется этап с картинами"></b></div><p id="readinessText">До этапа с картинами — 24 тренировки</p></div>
     </aside>
     <section class="play-area" aria-live="polite">
-      <div class="play-toolbar"><span id="modeLabel">Выберите одну плитку</span><div class="vision-toggle" aria-label="Режим просмотра"><button class="active" type="button" data-vision="color">Цвет</button><button type="button" data-vision="gray">Ч/Б</button></div></div>
+      <div class="play-toolbar"><span id="modeLabel">Выберите одну плитку</span><div class="vision-toggle" aria-label="Режим просмотра"><button class="active" type="button" data-vision="color">Цвет</button><button type="button" data-vision="gray" disabled>Ч/Б</button></div></div>
       <div class="tiles" id="tiles" role="group" aria-label="Цветовые плитки"></div>
       <div class="tone-rack"><div class="rack-head"><span>Ваша тональная шкала</span><button id="undoButton" type="button" disabled>Отменить</button></div><div class="rack-slots" id="rackSlots"></div></div>
       <div class="feedback" id="feedback" hidden>
