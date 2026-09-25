@@ -7,3 +7,5 @@
 .readiness p { margin: 0; color: var(--muted); font-size: .78rem; line-height: 1.4; }
 .complete-progress { display: flex; justify-content: space-between; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 14px 0; margin: -10px 0 24px; color: var(--muted); font-size: .85rem; }
 .complete-progress b { color: var(--acid); }
+.color-tile.revealed { filter: none; background: var(--gray); }
+.vision-toggle button:disabled { cursor: not-allowed; opacity: .35; }

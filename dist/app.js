@@ -1,8 +1,8 @@
 (() => {
   const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
   const levels = [
-    {name:"Контраст",count:2,gap:.34,mode:"pick",lesson:"Два цвета далеко друг от друга по светлоте. Не называйте цвет — просто почувствуйте, где больше света."},
-    {name:"Ловушка цвета",count:2,gap:.17,mode:"pick",lesson:"Насыщенный цвет кажется ярче, но не всегда светлее. Мысленно уберите оттенок."},
+    {name:"Контраст",count:2,gap:.34,mode:"pick",lesson:"Мысленно превратите обе плитки в серые. Какая из воображаемых серых карточек будет светлее?"},
+    {name:"Ловушка цвета",count:2,gap:.17,mode:"pick",lesson:"Насыщенность — это сила цвета, а не его светлота. Яркий синий вполне может стать тёмно-серым."},
     {name:"Третий лишний",count:3,gap:.13,mode:"pick",lesson:"Теперь нужно удержать три отношения одновременно и найти крайний тон."},
     {name:"Шкала × 4",count:4,gap:.14,mode:"order",lesson:"Соберите всю шкалу. Начните с крайних тонов — середину будет легче поставить между ними."},
     {name:"Шкала × 5",count:5,gap:.105,mode:"order",lesson:"Соседние тона стали ближе. Сравнивайте новую плитку с уже выбранной, а не со всеми сразу."},
@@ -35,16 +35,16 @@
   }
   function makeRound(){
     const level=levels[state.level];state.selection=[];state.locked=false;state.gray=false;state.answerType=Math.random()>.5?"light":"dark";
-    $("#feedback").hidden=true;$("#feedback").classList.remove("wrong");$$("[data-vision]").forEach(b=>b.classList.toggle("active",b.dataset.vision==="color"));
+    $("#feedback").hidden=true;$("#feedback").classList.remove("wrong");$$("[data-vision]").forEach(b=>{b.classList.toggle("active",b.dataset.vision==="color");b.disabled=b.dataset.vision==="gray"});
     const span=level.gap*(level.count-1),center=.5+(Math.random()-.5)*.12,start=clamp(center+span/2,span+.12,.86);
     const targets=Array.from({length:level.count},(_,i)=>start-level.gap*i),scene=scenePalettes[Math.floor(Math.random()*scenePalettes.length)],palette=shuffle(scene.colors).slice(0,level.count);
     state.sceneName=scene.name;state.colors=shuffle(targets.map((target,rank)=>{const [hue,saturation]=palette[rank];const rgb=colorAtLuminance(target,hue,clamp(saturation+(Math.random()-.5)*10,38,94));return{rgb,lum:luminance(rgb),rank}}));
     $("#levelKicker").textContent=`Уровень ${state.level+1} · ${level.name}`;$("#lessonNumber").textContent=String(state.level+1).padStart(2,"0");$("#lessonText").textContent=level.lesson;
     $("#roundStat").textContent=`${state.round} / 5`;$("#scoreStat").textContent=state.score;$("#streakStat").textContent=state.streak;
-    $("#prompt").textContent=level.mode==="order"?"Соберите от светлого к тёмному":`Какой цвет ${state.answerType==="light"?"светлее":"темнее"}?`;
-    $("#instruction").textContent=level.mode==="order"?"Нажимайте на плитки по порядку. Первый выбор — самый светлый.":"Смотрите на количество света, а не на яркость оттенка.";
+    $("#prompt").textContent=level.mode==="order"?"Соберите от светлого к тёмному":`Какая плитка станет ${state.answerType==="light"?"светлее":"темнее"} в Ч/Б?`;
+    $("#instruction").textContent=level.mode==="order"?"Мысленно обесцветьте плитки и нажимайте от самого светлого серого к самому тёмному.":"Мысленно уберите цвет. Сравните только будущие оттенки серого.";
     $("#modeLabel").textContent=`Палитра «${scene.name}» · ${level.mode==="order"?`тон 1 из ${level.count}`:"выберите плитку"}`;
-    const tiles=$("#tiles");tiles.className=`tiles count-${level.count}`;tiles.innerHTML=state.colors.map((c,i)=>`<button class="color-tile" type="button" style="--tile:${rgbText(c.rgb)}" data-index="${i}" aria-label="Цветовая плитка ${i+1}"><span class="tile-rank">${c.rank+1}</span></button>`).join("");
+    const tiles=$("#tiles");tiles.className=`tiles count-${level.count}`;tiles.innerHTML=state.colors.map((c,i)=>`<button class="color-tile" type="button" style="--tile:${rgbText(c.rgb)};--gray:${grayText(c.lum)}" data-index="${i}" aria-label="Цветовая плитка ${i+1}"><span class="tile-rank">${c.rank+1}</span></button>`).join("");
     $$(".color-tile").forEach(t=>t.addEventListener("click",()=>chooseColor(Number(t.dataset.index))));renderRack();renderLevels();updateReadiness();
   }
   function renderRack(){
@@ -59,9 +59,9 @@
     const level=levels[state.level];state.locked=true;const expected=level.mode==="pick"?(state.answerType==="light"?0:level.count-1):state.colors.map((_,i)=>i).sort((a,b)=>state.colors[a].rank-state.colors[b].rank);
     const correct=level.mode==="pick"?state.colors[state.selection[0]].rank===expected:state.selection.every((x,i)=>x===expected[i]);
     if(correct){state.correctInLevel++;state.streak++;state.score+=100+Math.min(5,state.streak-1)*20}else state.streak=0;$("#scoreStat").textContent=state.score;$("#streakStat").textContent=state.streak;state.gray=true;
-    $$(".color-tile").forEach((tile,i)=>{tile.classList.remove("selected");tile.classList.add("revealed");tile.disabled=true;if(level.mode==="pick"){const actual=state.colors[i].rank;if(actual===expected)tile.classList.add("correct");if(i===state.selection[0]&&actual!==expected)tile.classList.add("wrong")}});renderRack();$$("[data-vision]").forEach(b=>b.classList.toggle("active",b.dataset.vision==="gray"));
+    $$(".color-tile").forEach((tile,i)=>{tile.classList.remove("selected");tile.classList.add("revealed");tile.disabled=true;if(level.mode==="pick"){const actual=state.colors[i].rank;if(actual===expected)tile.classList.add("correct");if(i===state.selection[0]&&actual!==expected)tile.classList.add("wrong")}});renderRack();$$("[data-vision]").forEach(b=>{b.disabled=false;b.classList.toggle("active",b.dataset.vision==="gray")});
     const f=$("#feedback");f.hidden=false;f.classList.toggle("wrong",!correct);$("#resultMark").textContent=correct?"Верно":"Почти";$("#resultTitle").textContent=correct?"Вы увидели тон":"Оттенок обманул глаз";
-    $("#resultText").textContent=correct?"В чёрно-белом режиме видно: порядок совпал с настоящей светлотой.":level.mode==="pick"?"Посмотрите на номера: 1 — самый светлый. Запомните это ощущение, не название цвета.":"Номера показывают правильный порядок. Сравните места, где шкала сломалась.";
+    $("#resultText").textContent=correct?"После обесцвечивания видно: ваш ответ совпал с порядком серых тонов.":level.mode==="pick"?"Посмотрите на серые плитки: 1 — самая светлая. Насыщенность исходного цвета могла отвлечь вас.":"Номера показывают правильный порядок серых тонов. Сравните места, где шкала сломалась.";
     $("#nextButton").innerHTML=state.round===5?'Результат уровня <span>→</span>':'Следующий раунд <span>→</span>';
   }
   function nextRound(){if(state.round<5){state.round++;makeRound()}else showLevelComplete()}
@@ -72,7 +72,7 @@
     $("#continueButton").hidden=!passed||state.level===5;if(state.level<5)$("#continueButton").innerHTML=`Уровень ${state.level+2} <span>→</span>`;$("#levelComplete").hidden=false;
   }
   function startLevel(index){if(index>=state.unlocked)return;state.level=index;state.round=1;state.correctInLevel=0;state.selection=[];$("#levelComplete").hidden=true;makeRound()}
-  function setVision(mode){if(state.locked&&mode==="color")return;state.gray=mode==="gray";$$(".color-tile").forEach(t=>t.classList.toggle("revealed",state.gray));$$("[data-vision]").forEach(b=>b.classList.toggle("active",b.dataset.vision===mode));renderRack()}
+  function setVision(mode){if(!state.locked)return;state.gray=mode==="gray";$$(".color-tile").forEach(t=>t.classList.toggle("revealed",state.gray));$$("[data-vision]").forEach(b=>b.classList.toggle("active",b.dataset.vision===mode));renderRack()}
   $("#undoButton").addEventListener("click",()=>{if(state.locked||!state.selection.length)return;const i=state.selection.pop(),t=$(`[data-index="${i}"]`);t.classList.remove("selected");delete t.dataset.order;renderRack()});
   $("#nextButton").addEventListener("click",nextRound);$("#continueButton").addEventListener("click",()=>startLevel(state.level+1));$("#replayButton").addEventListener("click",()=>startLevel(state.level));
   $("#brandButton").addEventListener("click",e=>{e.preventDefault();startLevel(0)});$$("[data-vision]").forEach(b=>b.addEventListener("click",()=>setVision(b.dataset.vision)));
