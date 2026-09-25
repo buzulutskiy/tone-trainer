@@ -1,0 +1,9 @@
+.readiness { border-top: 1px solid var(--line); padding-top: 16px; }
+.readiness-head { display: flex; justify-content: space-between; align-items: center; font-size: .72rem; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); }
+.readiness-head strong { color: var(--ink); font-size: .9rem; }
+.readiness-bar { position: relative; height: 8px; background: #2a2a2e; margin: 12px 0; }
+.readiness-bar i { display: block; width: 0; height: 100%; background: linear-gradient(90deg, var(--orange), var(--acid)); transition: width .4s ease; }
+.readiness-bar b { position: absolute; left: 80%; top: -4px; width: 2px; height: 16px; background: var(--ink); }
+.readiness p { margin: 0; color: var(--muted); font-size: .78rem; line-height: 1.4; }
+.complete-progress { display: flex; justify-content: space-between; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 14px 0; margin: -10px 0 24px; color: var(--muted); font-size: .85rem; }
+.complete-progress b { color: var(--acid); }
