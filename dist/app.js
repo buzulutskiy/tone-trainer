@@ -43,7 +43,7 @@
     state.sceneName=scene.name;state.colors=shuffle(targets.map((target,rank)=>{const [hue,saturation]=palette[rank];const rgb=colorAtLuminance(target,hue,clamp(saturation+(Math.random()-.5)*10,38,94));return{rgb,lum:luminance(rgb),rank}}));
     $("#levelKicker").textContent=`Уровень ${state.level+1} · ${level.name}`;$("#lessonNumber").textContent=String(state.level+1).padStart(2,"0");$("#lessonText").textContent=level.lesson;
     $("#roundStat").textContent=`${state.round} / 5`;$("#scoreStat").textContent=state.score;$("#streakStat").textContent=state.streak;
-    $("#prompt").textContent=level.mode==="order"?"Соберите от светлого к тёмному":`Какая плитка станет ${state.answerType==="light"?"светлее":"темнее"} в Ч/Б?`;
+    $("#prompt").textContent=level.mode==="order"?"Соберите от светлого к тёмному":`Какая плитка ${state.answerType==="light"?"светлее":"темнее"}?`;
     $("#instruction").textContent=level.mode==="order"?"Мысленно обесцветьте плитки и нажимайте от самого светлого серого к самому тёмному.":"Мысленно уберите цвет. Сравните только будущие оттенки серого.";
     $("#modeLabel").textContent=`Палитра «${scene.name}» · ${level.mode==="order"?`тон 1 из ${level.count}`:"выберите плитку"}`;
     const tiles=$("#tiles");tiles.className=`tiles count-${level.count}`;tiles.innerHTML=state.colors.map((c,i)=>`<button class="color-tile" type="button" style="--tile:${rgbText(c.rgb)};--gray:${grayText(c.lum)}" data-index="${i}" aria-label="Цветовая плитка ${i+1}"><span class="tile-rank">${c.rank+1}</span></button>`).join("");
